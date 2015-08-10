@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title>tip</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" type="text/css" href="../src/tip.css">
+	</head>
+	<body>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		<table style="width:100%;"><tr>
+			<td>
+				<input type="button" value="右边hover" id="btn-tip-right">
+			</td>
+			<td>
+				<input type="button" value="左边click" id="btn-tip-left">
+			</td>
+			<td>
+				<input type="button" value="上边click" id="btn-tip-top">
+			</td>
+			<td>
+				<input type="button" value="下边click" id="btn-tip-bottom">
+			</td>
+			<td align="right">
+				<input type="button" value="按边界click自动" id="btn-tip-auto">
+			</td>
+		</tr></table>
+		<br><br><br>
+			文本提示：<input type="text" id="txt-tip" msg="请输入内容">
+		<br><br><br><br><br><br><br><br><br><br><br>
+		<script type="text/javascript" src="../src/jquery-1.11.2.js"></script>
+		<script type="text/javascript" src="../src/tip.js"></script>
+		<script>
+		var tip = new Tip();
+		tip.init({
+			trigger: '#btn-tip-right',
+			width:100,
+			triggerEvent:'hover',
+			content: 'loading...',
+			ajax: function() {
+				var dtd = $.Deferred(); // 新建一个deferred对象
+				var wait = function(dtd) {
+					var tasks = function() {
+						console.log("执行完毕！");
+						dtd.resolve("这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊"); // 改变deferred对象的执行状态
+					};
+					setTimeout(tasks, 1000);
+					return dtd;
+				};
+				wait(dtd);
+				return dtd;
+			}
+		});
+		var tip_left= new Tip();
+		tip_left.init({
+			trigger:'#btn-tip-left',
+			triggerEvent:'click',
+			content: '这是提示信息啊',
+			position:'left'
+			});
+		var tip_top= new Tip();
+		tip_top.init({
+			trigger:'#btn-tip-top',
+			triggerEvent:'click',
+			content: '这是提示信息啊',
+			position:'top'
+			});
+		var tip_bottom= new Tip();
+		tip_bottom.init({
+			trigger:'#btn-tip-bottom',
+			triggerEvent:'click',
+			content: '这是提示信息啊',
+			position:'bottom'
+			});
+		var tip_auto= new Tip();
+		tip_auto.init({
+			trigger:'#btn-tip-auto',
+			triggerEvent:'click',
+			width:100,
+			content: '这是提示信息啊这是提示信息啊这是提示信息啊',
+			inViewport:true
+			});
+		var t = $('#txt-tip').Tip({
+			content:$('#txt-tip').attr('msg'),
+			triggerEvent:'focus'
+		})[0];
+		</script>
+	</body>
+</html>
