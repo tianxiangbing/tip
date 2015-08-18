@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-		<table style="width:100%;"><tr>
+		<table style="width:80%;"><tr>
 			<td>
 				<input type="button" value="右边hover" id="btn-tip-right">
 			</td>
@@ -24,66 +24,155 @@
 			<td align="right">
 				<input type="button" value="按边界click自动" id="btn-tip-auto">
 			</td>
-		</tr></table>
-		<br><br><br>
-			文本提示：<input type="text" id="txt-tip" msg="请输入内容">
-		<br><br><br><br><br><br><br><br><br><br><br>
-		<script type="text/javascript" src="../src/jquery-1.11.2.js"></script>
-		<script type="text/javascript" src="../src/tip.js"></script>
-		<script>
-		var tip = new Tip();
-		tip.init({
-			trigger: '#btn-tip-right',
-			width:100,
-			triggerEvent:'hover',
-			content: 'loading...',
-			ajax: function() {
-				var dtd = $.Deferred(); // 新建一个deferred对象
-				var wait = function(dtd) {
-					var tasks = function() {
-						console.log("执行完毕！");
-						dtd.resolve("这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊"); // 改变deferred对象的执行状态
-					};
-					setTimeout(tasks, 1000);
-					return dtd;
+		</tr>
+	</table>
+	<br><br>
+	<table style="300px;margin:0 auto;" id="table">
+		<tr>
+			<td>
+			</td>
+			<td>
+				<input type="button" value="上左" data-position="top|left">
+			</td>
+			<td>
+				<input type="button" value="上中" data-position="top|center">
+			</td>
+			<td>
+				<input type="button" value="上右" data-position="top|right">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="button" value="左上"  data-position="left|top">
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+				<input type="button" value="右上"  data-position="right|top">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="button" value="左中"  data-position="left|center">
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+				<input type="button" value="右中"  data-position="right|center">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="button" value="左下"  data-position="left|bottom">
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+				<input type="button" value="右下"  data-position="right|bottom">
+			</td>
+		</tr>
+		<tr>
+			<td>
+			</td>
+			<td>
+				<input type="button" value="下左"  data-position="bottom|left">
+			</td>
+			<td>
+				<input type="button" value="下中"  data-position="bottom|center">
+			</td>
+			<td>
+				<input type="button" value="下右"  data-position="bottom|right">
+			</td>
+		</tr>
+	</table>
+	<br>
+	文本提示：<input type="text" id="txt-tip" msg="请输入内容">
+	<br><br><br><br><br><br><br><br><br><br><br>
+	<script type="text/javascript" src="../src/jquery-1.11.2.js"></script>
+	<script type="text/javascript" src="../src/tip.js"></script>
+	<script>
+	var tip = new Tip();
+	tip.init({
+		trigger: '#btn-tip-right',
+		width:100,
+		triggerEvent:'hover',
+		content: 'loading...',
+		ajax: function() {
+			var dtd = $.Deferred(); // 新建一个deferred对象
+			var wait = function(dtd) {
+				var tasks = function() {
+					console.log("执行完毕！");
+					dtd.resolve("这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊这是提示信息啊"); // 改变deferred对象的执行状态
 				};
-				wait(dtd);
+				setTimeout(tasks, 1000);
 				return dtd;
+			};
+			wait(dtd);
+			return dtd;
+		}
+	});
+	var tip_left= new Tip();
+	tip_left.init({
+		trigger:'#btn-tip-left',
+		triggerEvent:'click',
+		width:100,
+		content: '这是提示信息啊这这是提示信息啊这是提示信息啊这是提示信息啊是提示信息啊这是提示信息啊',
+		position:'left|bottom'
+		});
+	var tip_top= new Tip();
+	tip_top.init({
+		trigger:'#btn-tip-top',
+		triggerEvent:'click',
+		content: '这是提示信息啊',
+		position:'top|left'
+		});
+	var tip_bottom= new Tip();
+	tip_bottom.init({
+		trigger:'#btn-tip-bottom',
+		triggerEvent:'click',
+		content: '这是提示信息啊',
+		position:'bottom|left'
+		});
+	var tip_auto= new Tip();
+	tip_auto.init({
+		trigger:'#btn-tip-auto',
+		triggerEvent:'click',
+		width:100,
+		position:'right|center',
+		content: '这是提示信息啊这这是提示信息啊这是提示信息啊这是提示信息啊是提示信息啊这是提示信息啊',
+		inViewport:true
+		});
+	var t = $('#txt-tip').Tip({
+		content:$('#txt-tip').attr('msg'),
+		triggerEvent:'focus'
+	})[0];
+	$('#table :button').each(function() {
+		var obj = this;
+		var t = new Tip();
+		t.init({
+			trigger: obj,
+			triggerEvent: 'hover',
+			width: 150,
+			position: $(obj).data('position'),
+			content: '这是提示信息啊这这是提示信息啊这是提示信息啊这是提示信息啊是提示信息啊这是提示信息啊',
+			inViewport: true,
+			beforeShow:function(){
+				$('.ui-tip').trigger('hide');
 			}
 		});
-		var tip_left= new Tip();
-		tip_left.init({
-			trigger:'#btn-tip-left',
-			triggerEvent:'click',
-			content: '这是提示信息啊',
-			position:'left'
-			});
-		var tip_top= new Tip();
-		tip_top.init({
-			trigger:'#btn-tip-top',
-			triggerEvent:'click',
-			content: '这是提示信息啊',
-			position:'top'
-			});
-		var tip_bottom= new Tip();
-		tip_bottom.init({
-			trigger:'#btn-tip-bottom',
-			triggerEvent:'click',
-			content: '这是提示信息啊',
-			position:'bottom'
-			});
-		var tip_auto= new Tip();
-		tip_auto.init({
-			trigger:'#btn-tip-auto',
-			triggerEvent:'click',
-			width:100,
-			content: '这是提示信息啊这是提示信息啊这是提示信息啊',
-			inViewport:true
-			});
-		var t = $('#txt-tip').Tip({
-			content:$('#txt-tip').attr('msg'),
-			triggerEvent:'focus'
-		})[0];
-		</script>
-	</body>
+	});
+	</script>
+</body>
 </html>

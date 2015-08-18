@@ -86,11 +86,11 @@
 #API
 ##属性
 ###trigger:`[$|dom|string]`
-	触发元素,jquery对象或dom或string
+	触发元素,jquery对象或dom或string,当delegate不为空时，trigger只支持string.
 ###triggerEvent: `[click|hover|focus]`
 	触发事件，默认为hover,事件都委托在delegate参数上，focus不委托
 ###delegate:`[dom|string]`
-	事件的委托节点,默认委托到body,focus无效.
+	事件的委托节点,默认无委托,focus无效.
 ###tpl:`[string]`
 	html模板，默认<div class="ui-tip"><div class="ui-tip-content"></div><div class="ui-tip-arrow"><i></i><em></em></div></div>
 ###offset:`{x:0,y:0}`
@@ -131,4 +131,10 @@
 	开始显示
 ##事件或回调
 ###callback:`function`
-	显示时的回调
+	显示后的回调
+###hide:`event`
+	tip的hide事件，
+###beforeShow:`function`
+	显示前的回调
+###afterHide:`function`
+	隐藏后的回调

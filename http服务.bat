@@ -1,3 +1,3 @@
 @Echo Off
-node http.js
+explorer http://localhost:3000/example/index.html & node http.js
 PAUSE
