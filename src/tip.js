@@ -153,12 +153,18 @@
 			this._timer && clearInterval(this._timer);
 			this._timer = setInterval(function() {
 				_this.setPosition();
-			}, 1000);
+			}, 100);
 		},
 		setPosition: function() {
 			var b = this.b;
 			var _this = this;
 			if (!this.tip || this.tip.size() == 0) return;
+			if($(this.settings.trigger).filter(':visible').size()==0){
+				this.tip.hide();
+				return false;
+			}else if(this.tip){
+				this.tip.show();
+			}
 			var targetPos = $(_this.settings.trigger).offset();
 			var targetWH = {
 				h: $(_this.settings.trigger).outerHeight(),
