@@ -6,7 +6,7 @@
 
 ----------
 
-#调用示例
+# 调用示例
 	<table style="width:100%;"><tr>
 		<td>
 			<input type="button" value="右边hover" id="btn-tip-right">
@@ -83,31 +83,31 @@
 	})[0];
 	</script>
 
-#API
-##属性
-###trigger:`[$|dom|string]`
+# API
+## 属性
+### trigger:`[$|dom|string]`
 	触发元素,jquery对象或dom或string,当delegate不为空时，trigger只支持string.
-###triggerEvent: `[click|hover|focus]`
+### triggerEvent: `[click|hover|focus]`
 	触发事件，默认为hover,事件都委托在delegate参数上，focus不委托
-###delegate:`[dom|string]`
+### delegate:`[dom|string]`
 	事件的委托节点,默认无委托,focus无效.
-###tpl:`[string]`
+### tpl:`[string]`
 	html模板，默认<div class="ui-tip"><div class="ui-tip-content"></div><div class="ui-tip-arrow"><i></i><em></em></div></div>
-###offset:`{x:0,y:0}`
+### offset:`{x:0,y:0}`
 	偏移量,默认x:0,y:0
-###width:`[number]`
+### width:`[number]`
 	宽
-###height:`[number]`
+### height:`[number]`
 	高
-###zIndex:`999`
+### zIndex:`999`
 	z-index
-###content:[string|$]
+### content:[string|$]
 	提示内容，这里可以是string或节点，因为内部是调用的$().html方法,动态设置请调setContent方法
-###inViewport:`bool`
+### inViewport:`bool`
 	是否自适合窗口位置,默认false
-###position:`['right'|'left'|'top'|'bottom']`
+### position:`['right'|'left'|'top'|'bottom']`
 	显示位置，默认'right
-###ajax:`function`
+### jax:`function`
 	返回一个promise,参数为promise之后的内容如下：
 	ajax: function() {
 		var dtd = $.Deferred(); // 新建一个deferred对象
@@ -122,19 +122,19 @@
 		wait(dtd);
 		return dtd;
 	}
-##方法
-###setContent:`function(content)`
+## 方法
+### setContent:`function(content)`
 	设置提示内容
-###stop:`function()`
+### stop:`function()`
 	停止显示
-###start:`function`
+### start:`function`
 	开始显示
-##事件或回调
-###callback:`function`
+## 事件或回调
+### callback:`function`
 	显示后的回调
-###hide:`event`
+### hide:`event`
 	tip的hide事件，
-###beforeShow:`function`
+### beforeShow:`function`
 	显示前的回调
-###afterHide:`function`
+### afterHide:`function`
 	隐藏后的回调
