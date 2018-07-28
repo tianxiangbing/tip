@@ -71,13 +71,15 @@
 				trigger = null;
 			}
 			if (this.settings.triggerEvent == 'click') {
-				$(delegate).on(this.settings.triggerEvent, trigger, function() {
+				$(delegate).on(this.settings.triggerEvent, trigger, function(e) {
+                    _this.settings.trigger = this;
 					if (_this.status == "hide") {
 						_this.show();
 					} else
 					if (_this.status == "show") {
 						_this.hide();
 					}
+					e.stopPropagation();
 				});
 			} else
 			if (this.settings.triggerEvent == "hover") {
@@ -121,11 +123,12 @@
 			});
 			this.setContent(this.settings.content);
 			if (this.settings.ajax) {
-				this.settings.ajax().done(function(content) {
+				this.settings.ajax(this.settings.trigger).done(function(content) {
 					_this.setContent(content);
 				})
 			}
 			this.setPosition();
+			this.initPos = {x:this.tip.x, y:this.tip.y};
 			this.status = 'show';
 			this.start();
 			this.settings.callback && this.settings.callback.call(this);
@@ -152,7 +155,11 @@
 			});
 			this._timer && clearInterval(this._timer);
 			this._timer = setInterval(function() {
-				_this.setPosition();
+				if(Math.abs(_this.tip.y-_this.initPos.y)>10 ||  Math.abs(_this.tip.x-_this.initPos.x)>10){
+					_this.hide();
+				}else{
+					_this.setPosition();
+				}
 			}, 100);
 		},
 		setPosition: function() {
@@ -196,8 +203,8 @@
 						this.tip.y = targetPos.top + _this.settings.offset.y + y;
 						this.tip.addClass('arrow-left');
 						this._overScreen();
+						break;
 					}
-					break;
 				case "top":
 					{
 						var x = 0,
@@ -214,12 +221,12 @@
 						}
 						this.tiparrow.y = tipWH.h - 2;
 						this.tiparrow.x = arrowx;
-						this.tip.x = targetPos.left + x;
+						this.tip.x = targetPos.left + _this.settings.offset.x + x;
 						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y - 10;
 						this.tip.addClass('arrow-top');
 						this._overScreen();
+						break;
 					}
-					break;
 				case "bottom":
 					{
 						var x = 0,
@@ -236,15 +243,14 @@
 						}
 						this.tiparrow.y = -6;
 						this.tiparrow.x = arrowx;
-						this.tip.x = targetPos.left + x;
+						this.tip.x = targetPos.left  + _this.settings.offset.x + x;
 						this.tip.y = targetPos.top + targetWH.h + _this.settings.offset.y + 10
 						this.tip.addClass('arrow-bottom');
 						this._overScreen();
+						break;
 					}
-					break;
 				default:
 					{ //right
-
 						var y = 0,
 							arrowy = 0;
 						if (this.arrowPosition == "top") {
@@ -258,13 +264,13 @@
 							arrowy = tipWH.h / 2 - 6;
 						}
 						this.tip.x = targetWH.w + targetPos.left + _this.settings.offset.x + 10;
-						this.tip.y = targetPos.top + y;
+						this.tip.y = targetPos.top + _this.settings.offset.y + y;
 						this.tip.addClass('arrow-right');
 						this.tiparrow.y = arrowy;
 						this.tiparrow.x = -6;
 						this._overScreen();
+						break;
 					}
-					break;
 			}
 			if (!this.settings.inViewport) {
 				this._setPosition();
