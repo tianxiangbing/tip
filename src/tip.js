@@ -125,6 +125,7 @@
 			if (this.settings.ajax) {
 				this.settings.ajax(this.settings.trigger).done(function(content) {
 					_this.setContent(content);
+					_this.start();
 				})
 			}
 			this.setPosition();
@@ -222,7 +223,7 @@
 						this.tiparrow.y = tipWH.h - 2;
 						this.tiparrow.x = arrowx;
 						this.tip.x = targetPos.left + _this.settings.offset.x + x;
-						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y - 10;
+						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y + 10;
 						this.tip.addClass('arrow-top');
 						this._overScreen();
 						break;
@@ -320,6 +321,7 @@
 					}
 				}
 				this.setPosition();
+				this.initPos = {x:this.tip.x, y:this.tip.y};
 			}
 			this._setPosition();
 		},
