@@ -59,7 +59,7 @@
 			this.bindEvent();
 		},
 		_getPos: function() {
-			this.position = this.settings.position.split('|')[0];
+			this.position = this.position || this.settings.position.split('|')[0];
 			this.arrowPosition = this.settings.position.split('|')[1] || "center";
 		},
 		bindEvent: function() {
@@ -125,18 +125,22 @@
 			if (this.settings.ajax) {
 				this.settings.ajax(this.settings.trigger).done(function(content) {
 					_this.setContent(content);
+					_this.b = false;
 					_this.start();
+					_this.setPosition();
 				})
+			}else{
+				this.initPos = {x:this.tip.x, y:this.tip.y};
+				this.status = 'show';
+				this.start();
+				this.setPosition();
 			}
-			this.setPosition();
-			this.initPos = {x:this.tip.x, y:this.tip.y};
-			this.status = 'show';
-			this.start();
 			this.settings.callback && this.settings.callback.call(this);
 		},
 		hide: function() {
 			$(this.tip).remove();
-			this.tip = null;
+			this.tip = undefined;
+			this.position = undefined;
 			this.status = 'hide';
 			this.stop();
 			this.b = false;
@@ -151,20 +155,24 @@
 				_this.setPosition();
 			}).scroll(function() {
 				_this._getPos();
-				_this.b = false;
+				// _this.b = false;
 				_this.setPosition();
 			});
 			this._timer && clearInterval(this._timer);
 			this._timer = setInterval(function() {
-				if(Math.abs(_this.tip.y-_this.initPos.y)>10 ||  Math.abs(_this.tip.x-_this.initPos.x)>10){
-					_this.hide();
-				}else{
+				// if(Math.abs(_this.tip.y-_this.initPos.y)>10 ||  Math.abs(_this.tip.x-_this.initPos.x)>10){
+				// 	_this.hide();
+				// 	console.log(2)
+				// }else{
 					_this.setPosition();
-				}
+					// console.log(3)
+				// }
 			}, 100);
 		},
 		setPosition: function() {
 			var b = this.b;
+			// console.log(4,b)
+			// if(!b)debugger;
 			var _this = this;
 			if (!this.tip || this.tip.size() == 0) return;
 			if($(this.settings.trigger).filter(':visible').size()==0){
@@ -274,7 +282,7 @@
 					}
 			}
 			if (!this.settings.inViewport) {
-				this._setPosition();
+				// this._setPosition();
 			}
 		},
 		stop: function() {
@@ -282,6 +290,7 @@
 			$(window).off("resize").off('scroll');
 		},
 		_overScreen: function() {
+			console.log(this.position,'o')
 			var winXY = {
 				y: $(window).scrollTop(),
 				x: $(window).scrollLeft()
