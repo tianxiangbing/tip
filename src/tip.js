@@ -150,7 +150,7 @@
 				this.setContent(this.settings.content);
 			}
 			if (this.settings.ajax) {
-				this.settings.ajax(this.settings.trigger).done(function(content) {
+				this.settings.ajax(this.trigger).done(function(content) {
 					_this.setContent(content);
 					_this.b = false;
 					_this.status = 'show';
