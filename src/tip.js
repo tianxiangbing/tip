@@ -41,6 +41,7 @@
 				callback: null,
 				tpl: '<div class="ui-tip"><div class="ui-tip-content"></div><div class="ui-tip-arrow"><i></i><em></em></div></div>',
 				triggerEvent: 'hover',
+				rightMouseTarget:undefined,
 				offset: {
 					x: 0,
 					y: 0
@@ -101,6 +102,25 @@
 					_this.show();
 				});
 			}
+			if(this.settings.rightMouseTarget){
+				$(delegate).on('contextmenu',this.settings.rightMouseTarget,function(e){
+					if(e.button==2){
+						//鼠标右键
+						_this.e = e;
+						_this.settings.trigger = $(this).find(_this.settings.trigger);
+						if (_this.status == "hide") {
+							_this.show();
+						} else
+						if (_this.status == "show") {
+							_this.hide();
+						}
+						e.stopPropagation();
+						e.preventDefault();
+						e.returnValue = false; // 解决IE8右键弹出
+						e.cancelBubble = true;
+					}
+				})
+			}
 		},
 		show: function() {
 			var _this = this;
@@ -121,11 +141,16 @@
 				height: this.settings.height,
 				width: this.settings.width
 			});
-			this.setContent(this.settings.content);
+			if(typeof this.settings.content == 'function'){
+				this.setContent(this.settings.content.call(this,this.settings.trigger));
+			}else{
+				this.setContent(this.settings.content);
+			}
 			if (this.settings.ajax) {
 				this.settings.ajax(this.settings.trigger).done(function(content) {
 					_this.setContent(content);
 					_this.b = false;
+					_this.status = 'show';
 					_this.start();
 					_this.setPosition();
 				})
@@ -182,6 +207,9 @@
 				this.tip.show();
 			}
 			var targetPos = $(_this.settings.trigger).offset();
+			if(this.settings.rightMouseTarget &&this.e && this.e.type == 'contextmenu'){
+				targetPos = {left:this.e.offsetX,top:this.e.offsetY};
+			}
 			var targetWH = {
 				h: $(_this.settings.trigger).outerHeight(),
 				w: $(_this.settings.trigger).outerWidth()

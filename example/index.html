@@ -10,7 +10,7 @@
 		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 		<table style="width:80%;"><tr>
 			<td>
-				<input type="button" value="右边hover" id="btn-tip-right">
+				<input type="button" value="右边hover 异步数据" id="btn-tip-right">
 			</td>
 			<td>
 				<input type="button" value="左边click" id="btn-tip-left">
@@ -21,13 +21,19 @@
 			<td>
 				<input type="button" value="下边click" id="btn-tip-bottom">
 			</td>
+			<td>
+				<input type="button" value="异步委托(支持鼠标右键)" id="btn-tip-ajax">
+			</td>
+			<td>
+				<input type="button" value="委托事件下动态内容非异步" id="btn-tip-anim">
+			</td>
 			<td align="right">
 				<input type="button" value="按边界click自动" id="btn-tip-auto">
 			</td>
 		</tr>
 	</table>
 	<br><br>
-	<table style="300px;margin:0 auto;" id="table">
+	<table style="width:300px;margin:0 auto;" id="table">
 		<tr>
 			<td>
 			</td>
@@ -173,6 +179,40 @@
 			}
 		});
 	});
+	//rightMouseTarget有值时，触发鼠标右键菜单事件。 this.settings.trigger为当前的dom对象。方便动态内容时使用.
+	var tipajax = new Tip();
+	tipajax.init({
+            trigger: '#btn-tip-ajax',
+            delegate:document,
+            triggerEvent:'click',
+            position:'bottom|left',
+            content: ' ',
+			offset:{x:-10,y:0},
+			rightMouseTarget:'body',
+            ajax: function(target) {
+				var dtd = $.Deferred(); // 新建一个deferred对象
+                setTimeout(()=>{
+					let $html="<div>abcdefg"+$(target).val()+"</div>"
+					dtd.resolve($html); 
+				});
+				return dtd;
+			}
+		})
+		//使用content函数来动态设置内容，或者在callback中使用setContent设置内容
+		var tipaAni = new Tip();
+		tipaAni.init({
+            trigger: '#btn-tip-anim',
+            delegate:document,
+            triggerEvent:'click',
+            position:'bottom|left',
+			rightMouseTarget:'body',
+            content: function(target){
+				let $html="<div>abcdefg"+$(target).val()+"</div>"
+				return $html;
+			},
+			offset:{x:-10,y:0},
+			rightMouseTarget:'body'
+		})
 	</script>
 </body>
 </html>
