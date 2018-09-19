@@ -108,7 +108,7 @@
 				$(delegate).on('contextmenu',this.settings.rightMouseTarget,function(e){
 					if(e.button==2){
 						//鼠标右键
-						debugger;
+						// debugger;
 						_this.e = e;
 						_this.trigger = $(this).find(_this.settings.trigger);
 						if (_this.status == "hide") {
@@ -322,7 +322,7 @@
 			$(window).off("resize").off('scroll');
 		},
 		_overScreen: function() {
-			console.log(this.position,'o')
+			// console.log(this.position,'o')
 			var winXY = {
 				y: $(window).scrollTop(),
 				x: $(window).scrollLeft()
