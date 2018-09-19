@@ -73,7 +73,7 @@
 			}
 			if (this.settings.triggerEvent == 'click') {
 				$(delegate).on(this.settings.triggerEvent, trigger, function(e) {
-                    _this.settings.trigger = this;
+                    _this.trigger = this;
 					if (_this.status == "hide") {
 						_this.show();
 					} else
@@ -86,6 +86,7 @@
 			if (this.settings.triggerEvent == "hover") {
 				var hovertimer = null;
 				$(delegate).on('mouseover', trigger, function() {
+					_this.trigger = this;
 					_this.show();
 					$(_this.tip).hover(function() {
 						clearTimeout(hovertimer);
@@ -93,6 +94,7 @@
 						_this.hide();
 					});
 				}).on('mouseout', trigger, function() {
+					_this.trigger = this;
 					hovertimer = setTimeout(function() {
 						_this.hide();
 					}, 500)
@@ -106,8 +108,9 @@
 				$(delegate).on('contextmenu',this.settings.rightMouseTarget,function(e){
 					if(e.button==2){
 						//鼠标右键
+						debugger;
 						_this.e = e;
-						_this.settings.trigger = $(this).find(_this.settings.trigger);
+						_this.trigger = $(this).find(_this.settings.trigger);
 						if (_this.status == "hide") {
 							_this.show();
 						} else
@@ -167,6 +170,7 @@
 			this.tip = undefined;
 			this.position = undefined;
 			this.status = 'hide';
+			this.e = undefined;
 			this.stop();
 			this.b = false;
 			this._getPos();
@@ -206,13 +210,13 @@
 			}else if(this.tip){
 				this.tip.show();
 			}
-			var targetPos = $(_this.settings.trigger).offset();
+			var targetPos = $(_this.trigger).offset();
 			if(this.settings.rightMouseTarget &&this.e && this.e.type == 'contextmenu'){
-				targetPos = {left:this.e.offsetX,top:this.e.offsetY};
+				targetPos = {left:this.e.pageX,top:this.e.pageY};
 			}
 			var targetWH = {
-				h: $(_this.settings.trigger).outerHeight(),
-				w: $(_this.settings.trigger).outerWidth()
+				h: $(_this.trigger).outerHeight(),
+				w: $(_this.trigger).outerWidth()
 			};
 			var tipWH = {
 				w: this.tip.outerWidth(),
