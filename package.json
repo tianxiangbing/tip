@@ -1,13 +1,14 @@
 {
   "name": "tip",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "tips",
   "main": "dist/tip.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"gulp"
   },
   "repository": {
     "type": "git",

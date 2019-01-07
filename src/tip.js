@@ -145,7 +145,7 @@
 				width: this.settings.width
 			});
 			if(typeof this.settings.content == 'function'){
-				this.setContent(this.settings.content.call(this,this.settings.trigger));
+				this.setContent(this.settings.content.call(this,this.trigger));
 			}else{
 				this.setContent(this.settings.content);
 			}
