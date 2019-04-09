@@ -204,7 +204,7 @@
 			// if(!b)debugger;
 			var _this = this;
 			if (!this.tip || this.tip.size() == 0) return;
-			if($(this.settings.trigger).filter(':visible').size()==0){
+			if($(this.trigger).filter(':visible').size()==0){
 				this.tip.hide();
 				return false;
 			}else if(this.tip){

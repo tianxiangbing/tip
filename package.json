@@ -1,6 +1,6 @@
 {
-  "name": "tip",
-  "version": "1.0.6",
+  "name": "jq-tip",
+  "version": "1.0.7",
   "description": "tips",
   "main": "dist/tip.js",
   "directories": {

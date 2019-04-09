@@ -5,6 +5,9 @@ jquery提示组件,动态内容tip,右键菜单tip提示
 **[DEMO请案例点击这里查看.](http://tianxiangbing.github.io/tip/example/ "tip demo")**
 
 ----------
+```
+npm install jq-tip --save
+```
 
 # 调用示例
 	<table style="width:100%;"><tr>
