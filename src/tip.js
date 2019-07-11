@@ -198,6 +198,11 @@
 				// }
 			}, 100);
 		},
+		setClass (forward){
+			if(!this.tip.hasClass(forward)){
+				this.tip.attr('class', 'ui-tip '+forward);
+			}
+		},
 		setPosition: function() {
 			var b = this.b;
 			// console.log(4,b)
@@ -222,7 +227,7 @@
 				w: this.tip.outerWidth(),
 				h: this.tip.outerHeight()
 			}
-			this.tip.attr('class', 'ui-tip');
+			// this.tip.attr('class', 'ui-tip');
 			switch (_this.position) {
 				case "left":
 					{
@@ -242,7 +247,7 @@
 						this.tiparrow.x = tipWH.w - 2;
 						this.tip.x = targetPos.left - tipWH.w + _this.settings.offset.x - 10;
 						this.tip.y = targetPos.top + _this.settings.offset.y + y;
-						this.tip.addClass('arrow-left');
+						this.setClass('arrow-left');
 						this._overScreen();
 						break;
 					}
@@ -263,8 +268,8 @@
 						this.tiparrow.y = tipWH.h - 2;
 						this.tiparrow.x = arrowx;
 						this.tip.x = targetPos.left + _this.settings.offset.x + x;
-						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y + 10;
-						this.tip.addClass('arrow-top');
+						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y -10;
+						this.setClass('arrow-top');
 						this._overScreen();
 						break;
 					}
@@ -286,7 +291,7 @@
 						this.tiparrow.x = arrowx;
 						this.tip.x = targetPos.left  + _this.settings.offset.x + x;
 						this.tip.y = targetPos.top + targetWH.h + _this.settings.offset.y + 10
-						this.tip.addClass('arrow-bottom');
+						this.setClass('arrow-bottom');
 						this._overScreen();
 						break;
 					}
@@ -306,7 +311,7 @@
 						}
 						this.tip.x = targetWH.w + targetPos.left + _this.settings.offset.x + 10;
 						this.tip.y = targetPos.top + _this.settings.offset.y + y;
-						this.tip.addClass('arrow-right');
+						this.setClass('arrow-right');
 						this.tiparrow.y = arrowy;
 						this.tiparrow.x = -6;
 						this._overScreen();
@@ -366,15 +371,22 @@
 			}
 			this._setPosition();
 		},
+		tolerance(a,b){
+			return Math.abs(a-b)>2;
+		},
 		_setPosition: function() {
-			this.tip.css({
-				left: this.tip.x,
-				top: this.tip.y
-			});
-			this.tiparrow.css({
-				top: this.tiparrow.y,
-				left: this.tiparrow.x
-			});
+			if(this.tolerance(this.tip.offset().left,this.tip.x)||this.tolerance(this.tip.offset().top,this.tip.y)){
+				this.tip.css({
+					left: this.tip.x,
+					top: this.tip.y
+				});
+			}
+			if(this.tolerance(this.tiparrow.offset().left,this.tiparrow.x)||this.tolerance(this.tiparrow.offset().top,this.tiparrow.y)){
+				this.tiparrow.css({
+					top: this.tiparrow.y,
+					left: this.tiparrow.x
+				});
+			}
 		},
 		setContent: function(content) {
 			this.tipcontent.html(content);

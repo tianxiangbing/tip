@@ -8,7 +8,7 @@
  */
 var gulp = require('gulp'),
     rjs = require('gulp-requirejs'),
-    uglify = require('gulp-uglify'),
+    // uglify = require('gulp-uglify'),
     cssmin = require('gulp-minify-css'),
     watchF = require('gulp-watch');
 var paths = {
@@ -17,7 +17,9 @@ var paths = {
     img:'src/*.png'
 };
 gulp.task('js', function() {
-    return gulp.src(paths.script).pipe(uglify()).pipe(gulp.dest('dist'));
+    return gulp.src(paths.script)
+    // .pipe(uglify())
+    .pipe(gulp.dest('dist'));
 });
 gulp.task('css', function() {
     return gulp.src(paths.css)
@@ -54,7 +56,8 @@ gulp.task('requirejs', function() {
             //     "jquery-private": {}
             // }
             // ... more require.js options
-        }).pipe(uglify())
+        })
+        // .pipe(uglify())
         .pipe(gulp.src(['src/jquery-1.11.2.js', 'src/require.js']).pipe(uglify()))
         .pipe(gulp.dest('dest')); // pipe it to the output DIR
 });

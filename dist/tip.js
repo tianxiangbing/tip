@@ -1,1 +1,397 @@
-!function(t,i){"function"==typeof define&&define.amd?define(["$"],i):"object"==typeof exports?module.exports=i():t.Tip=i(window.Zepto||window.jQuery||$)}(this,function(a){function o(){var t=Math.random().toString().replace(".","");this.id="Tip_"+t}return a.fn.Tip=function(s){var e=[];return a(this).each(function(){var t=a.extend({trigger:this},s),i=new o;i.init(t),e.push(i)}),a(e)},o.prototype={init:function(t){this.settings=a.extend({trigger:"",status:"hide",callback:null,tpl:'<div class="ui-tip"><div class="ui-tip-content"></div><div class="ui-tip-arrow"><i></i><em></em></div></div>',triggerEvent:"hover",rightMouseTarget:void 0,offset:{x:0,y:0},width:"auto",height:"auto",zIndex:999,content:"",inViewport:!0,delegate:null,position:"right",ajax:null},t),this.status=this.settings.status,this._getPos(),this.bindEvent()},_getPos:function(){this.position=this.position||this.settings.position.split("|")[0],this.arrowPosition=this.settings.position.split("|")[1]||"center"},bindEvent:function(){var i=this,t=this.settings.delegate,s=this.settings.trigger;if(t||(t=this.settings.trigger,s=null),"click"==this.settings.triggerEvent)a(t).on(this.settings.triggerEvent,s,function(t){i.trigger=this,"hide"==i.status?i.show():"show"==i.status&&i.hide(),t.stopPropagation()});else if("hover"==this.settings.triggerEvent){var e=null;a(t).on("mouseover",s,function(){i.trigger=this,i.show(),a(i.tip).hover(function(){clearTimeout(e)},function(){i.hide()})}).on("mouseout",s,function(){i.trigger=this,e=setTimeout(function(){i.hide()},500)})}else this.settings.triggerEvent&&a(this.settings.trigger).on(this.settings.triggerEvent,function(){i.show()});this.settings.rightMouseTarget&&a(t).on("contextmenu",this.settings.rightMouseTarget,function(t){2==t.button&&(i.e=t,i.trigger=a(this).find(i.settings.trigger),"hide"==i.status?i.show():"show"==i.status&&i.hide(),t.stopPropagation(),t.preventDefault(),t.returnValue=!1,t.cancelBubble=!0)})},show:function(){var i=this;this.settings.beforeShow&&this.settings.beforeShow.call(this),this.tip||(this.tip=a(this.settings.tpl),this.tipcontent=this.tip.find(".ui-tip-content"),this.tiparrow=this.tip.find(".ui-tip-arrow"),a("body").append(this.tip),this.tip.on("hide",function(){i.hide()})),this.tip.show().css({zIndex:this.settings.zIndex}),this.tipcontent.css({height:this.settings.height,width:this.settings.width}),"function"==typeof this.settings.content?this.setContent(this.settings.content.call(this,this.trigger)):this.setContent(this.settings.content),this.settings.ajax?this.settings.ajax(this.trigger).done(function(t){i.setContent(t),i.b=!1,i.status="show",i.start(),i.setPosition()}):(this.initPos={x:this.tip.x,y:this.tip.y},this.status="show",this.start(),this.setPosition()),this.settings.callback&&this.settings.callback.call(this)},hide:function(){a(this.tip).remove(),this.tip=void 0,this.position=void 0,this.status="hide",this.e=void 0,this.stop(),this.b=!1,this._getPos(),this.settings.afterHide&&this.settings.afterHide.call(this)},start:function(){var t=this;a(window).resize(function(){t._getPos(),t.b=!1,t.setPosition()}).scroll(function(){t._getPos(),t.setPosition()}),this._timer&&clearInterval(this._timer),this._timer=setInterval(function(){t.setPosition()},100)},setPosition:function(){this.b;var t=this;if(this.tip&&0!=this.tip.size()){if(0==a(this.trigger).filter(":visible").size())return this.tip.hide(),!1;this.tip&&this.tip.show();var i=a(t.trigger).offset();this.settings.rightMouseTarget&&this.e&&"contextmenu"==this.e.type&&(i={left:this.e.pageX,top:this.e.pageY});var s=a(t.trigger).outerHeight(),e=a(t.trigger).outerWidth(),o=this.tip.outerWidth(),n=this.tip.outerHeight();switch(this.tip.attr("class","ui-tip"),t.position){case"left":var h=0,r=0;r="top"==this.arrowPosition?(h=+t.settings.offset.y,10):"bottom"==this.arrowPosition?(h=t.settings.offset.y-n+s,n-22):(h=t.settings.offset.y-(n-s)/2,n/2-6),this.tiparrow.y=r,this.tiparrow.x=o-2,this.tip.x=i.left-o+t.settings.offset.x-10,this.tip.y=i.top+t.settings.offset.y+h,this.tip.addClass("arrow-left"),this._overScreen();break;case"top":var g=0,p=0;p="left"==this.arrowPosition?(g=0,10):"right"==this.arrowPosition?(g=+e-o,o-22):(g=-(o-e)/2,o/2-6),this.tiparrow.y=n-2,this.tiparrow.x=p,this.tip.x=i.left+t.settings.offset.x+g,this.tip.y=i.top-n+t.settings.offset.y+10,this.tip.addClass("arrow-top"),this._overScreen();break;case"bottom":g=0,p=0;p="left"==this.arrowPosition?(g=0,10):"right"==this.arrowPosition?(g=+e-o,o-22):(g=-(o-e)/2,o/2-6),this.tiparrow.y=-6,this.tiparrow.x=p,this.tip.x=i.left+t.settings.offset.x+g,this.tip.y=i.top+s+t.settings.offset.y+10,this.tip.addClass("arrow-bottom"),this._overScreen();break;default:h=0,r=0;r="top"==this.arrowPosition?(h=+t.settings.offset.y,10):"bottom"==this.arrowPosition?(h=t.settings.offset.y-n+s,n-22):(h=t.settings.offset.y-(n-s)/2,n/2-6),this.tip.x=e+i.left+t.settings.offset.x+10,this.tip.y=i.top+t.settings.offset.y+h,this.tip.addClass("arrow-right"),this.tiparrow.y=r,this.tiparrow.x=-6,this._overScreen()}this.settings.inViewport}},stop:function(){clearInterval(this._timer),a(window).off("resize").off("scroll")},_overScreen:function(){var t=a(window).scrollTop(),i=a(window).scrollLeft(),s=a(window).width(),e=a(window).height();this.settings.inViewport&&!this.b&&(this.b=!0,this.tip.x-i<0&&("left"==this.position?this.position="right":this.arrowPosition="left"),this.tip.y<t&&("top"==this.position?this.position="bottom":this.arrowPosition="top"),this.tip.y+this.tip.outerHeight()>e+t&&("bottom"==this.position?this.position="top":this.arrowPosition="bottom"),this.tip.x+this.tip.outerWidth()>i+s&&("right"==this.position?this.position="left":this.arrowPosition="right"),this.setPosition(),this.initPos={x:this.tip.x,y:this.tip.y}),this._setPosition()},_setPosition:function(){this.tip.css({left:this.tip.x,top:this.tip.y}),this.tiparrow.css({top:this.tiparrow.y,left:this.tiparrow.x})},setContent:function(t){this.tipcontent.html(t),this.setPosition()}},o});
+/*
+ * Created with Sublime Text 3.
+ * license: http://www.lovewebgames.com/jsmodule/index.html
+ * User: 田想兵
+ * Date: 2015-06-12
+ * Time: 17:34:25
+ * Contact: 55342775@qq.com
+ */
+(function(root, factory) {
+	//amd
+	if (typeof define === 'function' && define.amd) {
+		define(['$'], factory);
+	} else if (typeof exports === 'object') { //umd
+		module.exports = factory();
+	} else {
+		root.Tip = factory(window.Zepto || window.jQuery || $);
+	}
+})(this, function($) {
+	$.fn.Tip = function(settings) {
+		var arr = [];
+		$(this).each(function() {
+			var options = $.extend({
+				trigger: this
+			}, settings);
+			var tip = new Tip();
+			tip.init(options);
+			arr.push(tip);
+		});
+		return $(arr);
+	};
+
+	function Tip() {
+		var rnd = Math.random().toString().replace('.', '');
+		this.id = 'Tip_' + rnd;
+	}
+	Tip.prototype = {
+		init: function(settings) {
+			this.settings = $.extend({
+				trigger: '',
+				status: 'hide',
+				callback: null,
+				tpl: '<div class="ui-tip"><div class="ui-tip-content"></div><div class="ui-tip-arrow"><i></i><em></em></div></div>',
+				triggerEvent: 'hover',
+				rightMouseTarget:undefined,
+				offset: {
+					x: 0,
+					y: 0
+				},
+				width: 'auto',
+				height: 'auto',
+				zIndex: 999,
+				content: '',
+				inViewport: true,
+				delegate: null,
+				position: 'right', //top||left||bottom||right,bottom|left/center/right
+				ajax: null //deffered
+			}, settings);
+			this.status = this.settings.status;
+			this._getPos();
+			this.bindEvent();
+		},
+		_getPos: function() {
+			this.position = this.position || this.settings.position.split('|')[0];
+			this.arrowPosition = this.settings.position.split('|')[1] || "center";
+		},
+		bindEvent: function() {
+			var _this = this;
+			var delegate = this.settings.delegate;
+			var trigger = this.settings.trigger;
+			if (!delegate) {
+				delegate = this.settings.trigger;
+				trigger = null;
+			}
+			if (this.settings.triggerEvent == 'click') {
+				$(delegate).on(this.settings.triggerEvent, trigger, function(e) {
+                    _this.trigger = this;
+					if (_this.status == "hide") {
+						_this.show();
+					} else
+					if (_this.status == "show") {
+						_this.hide();
+					}
+					e.stopPropagation();
+				});
+			} else
+			if (this.settings.triggerEvent == "hover") {
+				var hovertimer = null;
+				$(delegate).on('mouseover', trigger, function() {
+					_this.trigger = this;
+					_this.show();
+					$(_this.tip).hover(function() {
+						clearTimeout(hovertimer);
+					}, function() {
+						_this.hide();
+					});
+				}).on('mouseout', trigger, function() {
+					_this.trigger = this;
+					hovertimer = setTimeout(function() {
+						_this.hide();
+					}, 500)
+				});
+			} else if (this.settings.triggerEvent) {
+				$(this.settings.trigger).on(this.settings.triggerEvent, function() {
+					_this.show();
+				});
+			}
+			if(this.settings.rightMouseTarget){
+				$(delegate).on('contextmenu',this.settings.rightMouseTarget,function(e){
+					if(e.button==2){
+						//鼠标右键
+						// debugger;
+						_this.e = e;
+						_this.trigger = $(this).find(_this.settings.trigger);
+						if (_this.status == "hide") {
+							_this.show();
+						} else
+						if (_this.status == "show") {
+							_this.hide();
+						}
+						e.stopPropagation();
+						e.preventDefault();
+						e.returnValue = false; // 解决IE8右键弹出
+						e.cancelBubble = true;
+					}
+				})
+			}
+		},
+		show: function() {
+			var _this = this;
+			this.settings.beforeShow && this.settings.beforeShow.call(this);
+			if (!this.tip) {
+				this.tip = $(this.settings.tpl);
+				this.tipcontent = this.tip.find('.ui-tip-content');
+				this.tiparrow = this.tip.find('.ui-tip-arrow');
+				$('body').append(this.tip);
+				this.tip.on('hide', function() {
+					_this.hide();
+				})
+			}
+			this.tip.show().css({
+				zIndex: this.settings.zIndex
+			});
+			this.tipcontent.css({
+				height: this.settings.height,
+				width: this.settings.width
+			});
+			if(typeof this.settings.content == 'function'){
+				this.setContent(this.settings.content.call(this,this.trigger));
+			}else{
+				this.setContent(this.settings.content);
+			}
+			if (this.settings.ajax) {
+				this.settings.ajax(this.trigger).done(function(content) {
+					_this.setContent(content);
+					_this.b = false;
+					_this.status = 'show';
+					_this.start();
+					_this.setPosition();
+				})
+			}else{
+				this.initPos = {x:this.tip.x, y:this.tip.y};
+				this.status = 'show';
+				this.start();
+				this.setPosition();
+			}
+			this.settings.callback && this.settings.callback.call(this);
+		},
+		hide: function() {
+			$(this.tip).remove();
+			this.tip = undefined;
+			this.position = undefined;
+			this.status = 'hide';
+			this.e = undefined;
+			this.stop();
+			this.b = false;
+			this._getPos();
+			this.settings.afterHide && this.settings.afterHide.call(this);
+		},
+		start: function() {
+			var _this = this;
+			$(window).resize(function() {
+				_this._getPos();
+				_this.b = false;
+				_this.setPosition();
+			}).scroll(function() {
+				_this._getPos();
+				// _this.b = false;
+				_this.setPosition();
+			});
+			this._timer && clearInterval(this._timer);
+			this._timer = setInterval(function() {
+				// if(Math.abs(_this.tip.y-_this.initPos.y)>10 ||  Math.abs(_this.tip.x-_this.initPos.x)>10){
+				// 	_this.hide();
+				// 	console.log(2)
+				// }else{
+					_this.setPosition();
+					// console.log(3)
+				// }
+			}, 100);
+		},
+		setClass (forward){
+			if(!this.tip.hasClass(forward)){
+				this.tip.attr('class', 'ui-tip '+forward);
+			}
+		},
+		setPosition: function() {
+			var b = this.b;
+			// console.log(4,b)
+			// if(!b)debugger;
+			var _this = this;
+			if (!this.tip || this.tip.size() == 0) return;
+			if($(this.trigger).filter(':visible').size()==0){
+				this.tip.hide();
+				return false;
+			}else if(this.tip){
+				this.tip.show();
+			}
+			var targetPos = $(_this.trigger).offset();
+			if(this.settings.rightMouseTarget &&this.e && this.e.type == 'contextmenu'){
+				targetPos = {left:this.e.pageX,top:this.e.pageY};
+			}
+			var targetWH = {
+				h: $(_this.trigger).outerHeight(),
+				w: $(_this.trigger).outerWidth()
+			};
+			var tipWH = {
+				w: this.tip.outerWidth(),
+				h: this.tip.outerHeight()
+			}
+			// this.tip.attr('class', 'ui-tip');
+			switch (_this.position) {
+				case "left":
+					{
+						var y = 0,
+							arrowy = 0;
+						if (this.arrowPosition == "top") {
+							y = +_this.settings.offset.y;
+							arrowy = 10;
+						} else if (this.arrowPosition == "bottom") {
+							y = _this.settings.offset.y - tipWH.h + targetWH.h;
+							arrowy = tipWH.h - 22;
+						} else {
+							y = _this.settings.offset.y - (tipWH.h - targetWH.h) / 2;
+							arrowy = tipWH.h / 2 - 6;
+						}
+						this.tiparrow.y = arrowy;
+						this.tiparrow.x = tipWH.w - 2;
+						this.tip.x = targetPos.left - tipWH.w + _this.settings.offset.x - 10;
+						this.tip.y = targetPos.top + _this.settings.offset.y + y;
+						this.setClass('arrow-left');
+						this._overScreen();
+						break;
+					}
+				case "top":
+					{
+						var x = 0,
+							arrowx = 0;
+						if (this.arrowPosition == "left") {
+							x = 0;
+							arrowx = 10;
+						} else if (this.arrowPosition == "right") {
+							x = +targetWH.w - tipWH.w;
+							arrowx = tipWH.w - 22;
+						} else {
+							x = -(tipWH.w - targetWH.w) / 2;
+							arrowx = tipWH.w / 2 - 6;
+						}
+						this.tiparrow.y = tipWH.h - 2;
+						this.tiparrow.x = arrowx;
+						this.tip.x = targetPos.left + _this.settings.offset.x + x;
+						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y -10;
+						this.setClass('arrow-top');
+						this._overScreen();
+						break;
+					}
+				case "bottom":
+					{
+						var x = 0,
+							arrowx = 0;
+						if (this.arrowPosition == "left") {
+							x = 0;
+							arrowx = 10;
+						} else if (this.arrowPosition == "right") {
+							x = +targetWH.w - tipWH.w;
+							arrowx = tipWH.w - 22;
+						} else {
+							x = -(tipWH.w - targetWH.w) / 2;
+							arrowx = tipWH.w / 2 - 6;
+						}
+						this.tiparrow.y = -6;
+						this.tiparrow.x = arrowx;
+						this.tip.x = targetPos.left  + _this.settings.offset.x + x;
+						this.tip.y = targetPos.top + targetWH.h + _this.settings.offset.y + 10
+						this.setClass('arrow-bottom');
+						this._overScreen();
+						break;
+					}
+				default:
+					{ //right
+						var y = 0,
+							arrowy = 0;
+						if (this.arrowPosition == "top") {
+							y = +_this.settings.offset.y;
+							arrowy = 10;
+						} else if (this.arrowPosition == "bottom") {
+							y = _this.settings.offset.y - tipWH.h + targetWH.h;
+							arrowy = tipWH.h - 22;
+						} else {
+							y = _this.settings.offset.y - (tipWH.h - targetWH.h) / 2;
+							arrowy = tipWH.h / 2 - 6;
+						}
+						this.tip.x = targetWH.w + targetPos.left + _this.settings.offset.x + 10;
+						this.tip.y = targetPos.top + _this.settings.offset.y + y;
+						this.setClass('arrow-right');
+						this.tiparrow.y = arrowy;
+						this.tiparrow.x = -6;
+						this._overScreen();
+						break;
+					}
+			}
+			if (!this.settings.inViewport) {
+				// this._setPosition();
+			}
+		},
+		stop: function() {
+			clearInterval(this._timer);
+			$(window).off("resize").off('scroll');
+		},
+		_overScreen: function() {
+			// console.log(this.position,'o')
+			var winXY = {
+				y: $(window).scrollTop(),
+				x: $(window).scrollLeft()
+			};
+			var winWH = {
+				w: $(window).width(),
+				h: $(window).height()
+			};
+			if (this.settings.inViewport && !this.b) {
+				this.b = true;
+				if (this.tip.x - winXY.x < 0) {
+					if (this.position == "left") {
+						this.position = "right";
+					} else {
+						this.arrowPosition = "left";
+					}
+				}
+				if (this.tip.y < winXY.y) {
+					if (this.position == "top") {
+						this.position = "bottom";
+					} else {
+						this.arrowPosition = "top";
+					}
+				}
+				if (this.tip.y + this.tip.outerHeight() > winWH.h + winXY.y) {
+					if (this.position == "bottom") {
+						this.position = "top";
+					} else {
+						this.arrowPosition = "bottom";
+					}
+				}
+				if (this.tip.x + this.tip.outerWidth() > winXY.x + winWH.w) {
+					if (this.position == "right") {
+						this.position = "left";
+					} else {
+						this.arrowPosition = "right";
+					}
+				}
+				this.setPosition();
+				this.initPos = {x:this.tip.x, y:this.tip.y};
+			}
+			this._setPosition();
+		},
+		tolerance(a,b){
+			return Math.abs(a-b)>2;
+		},
+		_setPosition: function() {
+			if(this.tolerance(this.tip.offset().left,this.tip.x)||this.tolerance(this.tip.offset().top,this.tip.y)){
+				this.tip.css({
+					left: this.tip.x,
+					top: this.tip.y
+				});
+			}
+			if(this.tolerance(this.tiparrow.offset().left,this.tiparrow.x)||this.tolerance(this.tiparrow.offset().top,this.tiparrow.y)){
+				this.tiparrow.css({
+					top: this.tiparrow.y,
+					left: this.tiparrow.x
+				});
+			}
+		},
+		setContent: function(content) {
+			this.tipcontent.html(content);
+			this.setPosition();
+		}
+	}
+	return Tip;
+});
