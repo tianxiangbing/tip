@@ -1,7 +1,7 @@
 .ui-tip{
 	padding:5px 15px;  border: 1px solid #ffbb76;position: absolute;border-radius: 2px;zoom:1;display: none;min-height: 16px;background-color: #FFFCEF;
 }
-.ui-tip-content{line-height: 1.6;}
+.ui-tip-content{line-height: 1.6;overflow:auto;}
 .ui-tip-arrow{position:absolute;}
 .ui-tip-arrow i,.ui-tip-arrow em{height:0;font-size: 0;width:0;display: block;border-style: solid;border-color:transparent;position: absolute;}
 /*right*/
