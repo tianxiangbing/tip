@@ -268,7 +268,7 @@
 						this.tiparrow.x = arrowx;
 						this.tip.x = targetPos.left + _this.settings.offset.x + x;
 						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y + 10;
-						this.setClass('arrow-left');
+						this.setClass('arrow-top');
 						this._overScreen();
 						break;
 					}
@@ -290,7 +290,7 @@
 						this.tiparrow.x = arrowx;
 						this.tip.x = targetPos.left  + _this.settings.offset.x + x;
 						this.tip.y = targetPos.top + targetWH.h + _this.settings.offset.y + 10
-						this.setClass('arrow-left');
+						this.setClass('arrow-bottom');
 						this._overScreen();
 						break;
 					}
@@ -310,7 +310,7 @@
 						}
 						this.tip.x = targetWH.w + targetPos.left + _this.settings.offset.x + 10;
 						this.tip.y = targetPos.top + _this.settings.offset.y + y;
-						this.setClass('arrow-left');
+						this.setClass('arrow-right');
 						this.tiparrow.y = arrowy;
 						this.tiparrow.x = -6;
 						this._overScreen();
