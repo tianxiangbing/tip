@@ -8,14 +8,12 @@
  */
 (function(root, factory) {
 	//amd
-	if (typeof define === 'function' && define.amd) {
-		define(['$'], factory);
-	} else if (typeof exports === 'object') { //umd
+	if (typeof exports === 'object') { //umd
 		module.exports = factory();
 	} else {
-		root.Tip = factory(window.Zepto || window.jQuery || $);
+		root.Tip = factory();
 	}
-})(this, function($) {
+})(this, function() {
 	$.fn.Tip = function(settings) {
 		var arr = [];
 		$(this).each(function() {
@@ -33,6 +31,9 @@
 		var rnd = Math.random().toString().replace('.', '');
 		this.id = 'Tip_' + rnd;
 	}
+	$(document).click(function(){
+		$('.ui-tip').remove();
+	});
 	Tip.prototype = {
 		init: function(settings) {
 			this.settings = $.extend({
@@ -41,7 +42,7 @@
 				callback: null,
 				tpl: '<div class="ui-tip"><div class="ui-tip-content"></div><div class="ui-tip-arrow"><i></i><em></em></div></div>',
 				triggerEvent: 'hover',
-				rightMouseTarget:undefined,
+				rightMouseTarget : '.jqgrow',
 				offset: {
 					x: 0,
 					y: 0
@@ -73,13 +74,9 @@
 			}
 			if (this.settings.triggerEvent == 'click') {
 				$(delegate).on(this.settings.triggerEvent, trigger, function(e) {
-                    _this.trigger = this;
-					if (_this.status == "hide") {
-						_this.show();
-					} else
-					if (_this.status == "show") {
-						_this.hide();
-					}
+					_this.trigger = this;
+					_this.hide();
+					_this.show();
 					e.stopPropagation();
 				});
 			} else
@@ -108,7 +105,6 @@
 				$(delegate).on('contextmenu',this.settings.rightMouseTarget,function(e){
 					if(e.button==2){
 						//鼠标右键
-						// debugger;
 						_this.e = e;
 						_this.trigger = $(this).find(_this.settings.trigger);
 						if (_this.status == "hide") {
@@ -158,10 +154,12 @@
 					_this.setPosition();
 				})
 			}else{
-				this.initPos = {x:this.tip.x, y:this.tip.y};
-				this.status = 'show';
-				this.start();
-				this.setPosition();
+				if(this.tip){
+                    this.initPos = {x:this.tip.x, y:this.tip.y};
+                    this.status = 'show';
+                    this.start();
+                    this.setPosition();
+				}
 			}
 			this.settings.callback && this.settings.callback.call(this);
 		},
@@ -182,11 +180,12 @@
 				_this._getPos();
 				_this.b = false;
 				_this.setPosition();
-			}).scroll(function() {
-				_this._getPos();
+			})
+			// .scroll(function() {
+				// _this._getPos();
 				// _this.b = false;
-				_this.setPosition();
-			});
+				// _this.setPosition();
+			// });
 			this._timer && clearInterval(this._timer);
 			this._timer = setInterval(function() {
 				// if(Math.abs(_this.tip.y-_this.initPos.y)>10 ||  Math.abs(_this.tip.x-_this.initPos.x)>10){
@@ -227,7 +226,7 @@
 				w: this.tip.outerWidth(),
 				h: this.tip.outerHeight()
 			}
-			// this.tip.attr('class', 'ui-tip');
+			this.tip.attr('class', 'ui-tip');
 			switch (_this.position) {
 				case "left":
 					{
@@ -268,8 +267,8 @@
 						this.tiparrow.y = tipWH.h - 2;
 						this.tiparrow.x = arrowx;
 						this.tip.x = targetPos.left + _this.settings.offset.x + x;
-						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y -10;
-						this.setClass('arrow-top');
+						this.tip.y = targetPos.top - tipWH.h + _this.settings.offset.y + 10;
+						this.setClass('arrow-left');
 						this._overScreen();
 						break;
 					}
@@ -291,7 +290,7 @@
 						this.tiparrow.x = arrowx;
 						this.tip.x = targetPos.left  + _this.settings.offset.x + x;
 						this.tip.y = targetPos.top + targetWH.h + _this.settings.offset.y + 10
-						this.setClass('arrow-bottom');
+						this.setClass('arrow-left');
 						this._overScreen();
 						break;
 					}
@@ -311,7 +310,7 @@
 						}
 						this.tip.x = targetWH.w + targetPos.left + _this.settings.offset.x + 10;
 						this.tip.y = targetPos.top + _this.settings.offset.y + y;
-						this.setClass('arrow-right');
+						this.setClass('arrow-left');
 						this.tiparrow.y = arrowy;
 						this.tiparrow.x = -6;
 						this._overScreen();
@@ -389,8 +388,8 @@
 			}
 		},
 		setContent: function(content) {
-			this.tipcontent.html(content);
-			this.setPosition();
+            this.tipcontent.html(content);
+            this.setPosition();
 		}
 	}
 	return Tip;
