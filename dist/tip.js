@@ -2,6 +2,7 @@
  * Created with Sublime Text 3.
  * license: http://www.lovewebgames.com/jsmodule/index.html
  * User: 田想兵
+ * github: https://github.com/tianxiangbing/tip.git
  * Date: 2015-06-12
  * Time: 17:34:25
  * Contact: 55342775@qq.com
@@ -197,7 +198,7 @@
 				// }
 			}, 100);
 		},
-		setClass (forward){
+		setClass:function(forward){
 			if(!this.tip.hasClass(forward)){
 				this.tip.attr('class', 'ui-tip '+forward);
 			}
@@ -370,7 +371,7 @@
 			}
 			this._setPosition();
 		},
-		tolerance(a,b){
+		tolerance:function(a,b){
 			return Math.abs(a-b)>2;
 		},
 		_setPosition: function() {
