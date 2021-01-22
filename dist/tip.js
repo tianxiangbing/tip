@@ -32,7 +32,7 @@
 		this.id = 'Tip_' + rnd;
 	}
 	$(document).click(function(){
-		$('.ui-tip').remove();
+		$('.ui-tip').trigger('hide');
 	});
 	Tip.prototype = {
 		init: function(settings) {
@@ -299,17 +299,17 @@
 						var y = 0,
 							arrowy = 0;
 						if (this.arrowPosition == "top") {
-							y = +_this.settings.offset.y;
-							arrowy = 10;
+							y += _this.settings.offset.y;
+							arrowy = targetWH.h/2 - 6;
 						} else if (this.arrowPosition == "bottom") {
 							y = _this.settings.offset.y - tipWH.h + targetWH.h;
-							arrowy = tipWH.h - 22;
+							arrowy = tipWH.h - targetWH.h/2 - 6;
 						} else {
 							y = _this.settings.offset.y - (tipWH.h - targetWH.h) / 2;
 							arrowy = tipWH.h / 2 - 6;
 						}
-						this.tip.x = targetWH.w + targetPos.left + _this.settings.offset.x + 10;
-						this.tip.y = targetPos.top + _this.settings.offset.y + y;
+						this.tip.x = targetWH.w + targetPos.left + 10;
+						this.tip.y = targetPos.top + y;
 						this.setClass('arrow-right');
 						this.tiparrow.y = arrowy;
 						this.tiparrow.x = -6;
