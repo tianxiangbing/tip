@@ -2,6 +2,7 @@
  * Created with Sublime Text 3.
  * license: http://www.lovewebgames.com/jsmodule/index.html
  * User: 田想兵
+ * github: https://github.com/tianxiangbing/tip.git
  * Date: 2015-06-12
  * Time: 17:34:25
  * Contact: 55342775@qq.com
@@ -32,7 +33,7 @@
 		this.id = 'Tip_' + rnd;
 	}
 	$(document).click(function(){
-		$('.ui-tip').trigger('hide');
+		$('.ui-tip').remove();
 	});
 	Tip.prototype = {
 		init: function(settings) {
@@ -197,7 +198,7 @@
 				// }
 			}, 100);
 		},
-		setClass (forward){
+		setClass:function(forward){
 			if(!this.tip.hasClass(forward)){
 				this.tip.attr('class', 'ui-tip '+forward);
 			}
@@ -299,17 +300,17 @@
 						var y = 0,
 							arrowy = 0;
 						if (this.arrowPosition == "top") {
-							y += _this.settings.offset.y;
-							arrowy = targetWH.h/2 - 6;
+							y = +_this.settings.offset.y;
+							arrowy = 10;
 						} else if (this.arrowPosition == "bottom") {
 							y = _this.settings.offset.y - tipWH.h + targetWH.h;
-							arrowy = tipWH.h - targetWH.h/2 - 6;
+							arrowy = tipWH.h - 22;
 						} else {
 							y = _this.settings.offset.y - (tipWH.h - targetWH.h) / 2;
 							arrowy = tipWH.h / 2 - 6;
 						}
-						this.tip.x = targetWH.w + targetPos.left + 10;
-						this.tip.y = targetPos.top + y;
+						this.tip.x = targetWH.w + targetPos.left + _this.settings.offset.x + 10;
+						this.tip.y = targetPos.top + _this.settings.offset.y + y;
 						this.setClass('arrow-right');
 						this.tiparrow.y = arrowy;
 						this.tiparrow.x = -6;
@@ -370,7 +371,7 @@
 			}
 			this._setPosition();
 		},
-		tolerance(a,b){
+		tolerance:function(a,b){
 			return Math.abs(a-b)>2;
 		},
 		_setPosition: function() {
