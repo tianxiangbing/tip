@@ -162,7 +162,14 @@
                     this.setPosition();
 				}
 			}
+			//这里保存一份target的相对初始位置,用来判断是否有偏移
+			this.initPos = this.getTargetPosition();
 			this.settings.callback && this.settings.callback.call(this);
+		},
+		//这里保存一份target的相对初始位置,用来判断是否有偏移
+		getTargetPosition:function(){
+			var targetPos = $(this.trigger).offset();
+			return targetPos;
 		},
 		hide: function() {
 			$(this.tip).remove();
@@ -173,6 +180,7 @@
 			this.stop();
 			this.b = false;
 			this._getPos();
+			this.initPos = undefined;
 			this.settings.afterHide && this.settings.afterHide.call(this);
 		},
 		start: function() {
@@ -209,6 +217,11 @@
 			// if(!b)debugger;
 			var _this = this;
 			if (!this.tip || this.tip.size() == 0) return;
+			let newPosition=this.getTargetPosition();
+			if(_this.initPos && (Math.abs( Number(_this.initPos.left) - Number(newPosition.left))>10 ||  
+			 Math.abs( Number(_this.initPos.top) - Number(newPosition.top))>10) ){
+					_this.hide();
+			}
 			if($(this.trigger).filter(':visible').size()==0){
 				this.tip.hide();
 				return false;
@@ -367,7 +380,6 @@
 					}
 				}
 				this.setPosition();
-				this.initPos = {x:this.tip.x, y:this.tip.y};
 			}
 			this._setPosition();
 		},

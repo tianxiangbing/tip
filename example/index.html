@@ -8,6 +8,11 @@
 	</head>
 	<body>
 		<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+		<div style="position: relative; height:200px;width:200px;background-color: green;overflow: auto;">
+			<div style="width:400px;background-color: #ccc;">
+				<input type="button" value="右边hover 异步数据" id="btn-tip-right">
+			</div>
+		</div>
 		<table style="width:80%;"><tr>
 			<td>
 				<input type="button" value="右边hover 异步数据" id="btn-tip-right">
@@ -113,7 +118,7 @@
 	tip.init({
 		trigger: '#btn-tip-right',
 		width:100,
-		triggerEvent:'hover',
+		triggerEvent:'click',
 		content: 'loading...',
 		ajax: function() {
 			var dtd = $.Deferred(); // 新建一个deferred对象
