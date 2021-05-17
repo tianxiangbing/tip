@@ -217,7 +217,7 @@
 			// if(!b)debugger;
 			var _this = this;
 			if (!this.tip || this.tip.size() == 0) return;
-			let newPosition=this.getTargetPosition();
+			var newPosition=this.getTargetPosition();
 			if(_this.initPos && (Math.abs( Number(_this.initPos.left) - Number(newPosition.left))>10 ||  
 			 Math.abs( Number(_this.initPos.top) - Number(newPosition.top))>10) ){
 					_this.hide();
